@@ -725,6 +725,8 @@ Contrary to the message above, you don't want to pull the remote change into you
 Basically, if you're 100% certain that you are the only person who has commited to your branch, use `--force` , ortherwise use `force-with-lease` for safety.
 
 ***
+---
+
 
 # Tips & Tricks
 This section will grow, but here are just a few quick tips that you might find useful!
