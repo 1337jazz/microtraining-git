@@ -80,6 +80,9 @@ ccbb767 Add environment variables for AWS
 e02e95e Ad notifications db to compose file, update env.example
 ```
 
+## See the contents of a single commit
+It's very likely that you may one day need to see what actually went into a commit. You can use the simple command `git show <commit>` for this to see a *diff* of only what changed in that commit, compared to the commit before. Info on reading *diffs* is below.
+
 # Fix mistakes with `git commit --amend`
 
 This is a very useful command to use with `git commit` in (amongst others) these common situations:
@@ -445,92 +448,292 @@ git clone https://gitlab.com/microtraining-git/interactive-rebase-demo
 
 ```
 
+When you run `git rebase -i` you need to provide a commit to go back to. You can do this by  either giving an explcit commit hash, or using the HEAD syntax discussed previously. For example to include the last 4 commits in your rebase you could use:
+
+`git rebase -i HEAD~4`
+
+If you only have a few commits and what to go back to the very first commit the HEAD syntax won't work if you also want to include the "initial commit". For this situation you need to use, the `--root` flag instead of a commit reference. Usually you will likely have hundreds if not thousands of commits, so it wouldn't be practical to go all the way back to initial project creation, but in this case we only have about 11 commits in total so we'll keep it simple:
+
+`git rebase -i --root`
+
+When you start a rebase there are a few options available to you - let's talk about just a few of them right now, by looking at the self-explanatory messages for each - notice that one can use just the first letter of the command:
+
 ```
-# Rebase 38931b0 onto 2ee8c42 (38 commands)
-
-#
-
-# Commands:
-
-# p, f <commit> = use commit
-
+# p, pick <commit> = use commit
 # r, reword <commit> = use commit, but edit the commit message
-
 # e, edit <commit> = use commit, but stop for amending
-
 # s, squash <commit> = use commit, but meld into previous commit
-
 # f, fixup [-C | -c] <commit> = like "squash" but keep only the previous
-
-# commit's log message, unless -C is used, in which case
-
-# keep only this commit's message; -c is same as -C but
-
-# opens the editor
-
-# x, exec <command> = run command (the rest of the line) using shell
-
-# b, break = stop here (continue rebase later with 'git rebase --continue')
-
-# d, drop <commit> = remove commit
-
-# l, label <label> = label current HEAD with a name
-
-# t, reset <label> = reset HEAD to a label
-
-# m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
-
-# create a merge commit using the original merge commit's
-
-# message (or the oneline, if no original merge commit was
-
-# specified); use -c <commit> to reword the commit message
-
-# u, update-ref <ref> = track a placeholder for the <ref> to be updated
-
-# to this position in the new commits. The <ref> is
-
-# updated at the end of the rebase
-
-#
-
-# These lines can be re-ordered; they are executed from top to bottom.
-
-#
-
-# If you remove a line here THAT COMMIT WILL BE LOST.
-
-#
-
-# However, if you remove everything, the rebase will be aborted.
-
-#
 ```
+
+When you run the command, your chosen editor wiill open and you'll see all the commits from the comimt you chose all the way up to HEAD. You'll notice that the order of the commits has changed. Normally the order goes from (top to bottom) newest commit to oldest. In the interactive rebase it's reversed (example shows the result of `git rebase -i --root):
+
+```
+pick 0e19c7a initial commit
+pick cbee26b I added project files
+pick 519aab6 add basic HTML boilerplate
+pick 240827f add bootstrap
+pick 6e39a76 whoops forgot to add bootstrap js script
+pick 4ff2290 add top navbar
+pick 2a45e71 fix navbar typos
+pick 655204d fix another navbar typo
+pick 2029e20 my cat made this commit
+pick 3b23c17 Create README.md
+pick 5817334 Add credit to Colt Steele in README
+```
+
+`pick` just means "keep this commit" and is the default command for each commit
 
 ## Rewording
+If you want to reword a commit, you can simply change "pick" to "reword" (or "r"). In this example I want to reword commit `cbee26b I added project files` to read "Added project files" instead. So let's change `pick` to `reword`:
 
-## Fixing up
+```
+pick 0e19c7a initial commit
+reword cbee26b I added project files        <---
+pick 519aab6 add basic HTML boilerplate
+pick 240827f add bootstrap
+pick 6e39a76 whoops forgot to add bootstrap js script
+pick 4ff2290 add top navbar
+pick 2a45e71 fix navbar typos
+pick 655204d fix another navbar typo
+pick 2029e20 my cat made this commit
+pick 3b23c17 Create README.md
+pick 5817334 Add credit to Colt Steele in README
+```
+
+Note that **I don't actually change the commit message here**. I'm just telling git want I want to do, to each commit, and I can queue up several commands. In this case when I save and close my editor, another instance of my editor will immediately open:
+
+```
+I added project files
+  
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+// ...
+````
+
+Here is where you can actually change the commit message to whatever you want. Running `git log --oneline` now shows the newly editted commit message:
+
+```
+4d03f73 (HEAD -> main) Add credit to Colt Steele in README
+d954e32 Create README.md
+fb3f9b8 my cat made this commit
+2289422 fix another navbar typo
+60da46c fix navbar typos
+99fd100 add top navbar
+fccbae1 whoops forgot to add bootstrap js script
+d81b7af add bootstrap
+8eaf278 add basic HTML boilerplate
+804b7a1 Added project files                   <---- 
+0e19c7a initial commit
+```
+
+You'll notice now that every commit starting with the commit whose message we changed now has a new hash (`0e19c7a initial commit` is unchanged).
+
+## Fixing up / squashing
+
+`fixup` and `squash` accomplish the same thing, but the difference is just which log messages to keep. The idea behind these commands is the merge together two or more commits into one. Let's reset back to the remote and get our repo back to how it was without any rebasing:
+
+`git reset --hard origin/main`  <-- *(this command will be explained later)*
+
+`git rebase -i --root` should now show us this output again:
+
+```
+pick 0e19c7a initial commit
+pick cbee26b I added project files
+pick 519aab6 add basic HTML boilerplate
+pick 240827f add bootstrap
+pick 6e39a76 whoops forgot to add bootstrap js script
+pick 4ff2290 add top navbar
+pick 2a45e71 fix navbar typos
+pick 655204d fix another navbar typo
+pick 2029e20 my cat made this commit
+pick 3b23c17 Create README.md
+pick 5817334 Add credit to Colt Steele in README
+```
+
+If I want to merge together two commits, for example:
++ `6e39a76 whoops forgot to add bootstrap js script` 
+	and
++ `240827f add bootstrap`
+
+It makes sense to just have one commit that adds Bootstrap to our project, `6e39a76` is really just a mistake since the JS script is also necessary for Bootstrap - so it would be tidier to just have a single commit with the message "add bootstrap" that included all the changes from these two commits. Here's how we would do that:
+
+```
+pick 0e19c7a initial commit
+pick cbee26b I added project files
+pick 519aab6 add basic HTML boilerplate
+pick 240827f add bootstrap
+fixup 6e39a76 whoops forgot to add bootstrap js script <--- [added 'fixup']
+pick 4ff2290 add top navbar
+pick 2a45e71 fix navbar typos
+pick 655204d fix another navbar typo
+pick 2029e20 my cat made this commit
+pick 3b23c17 Create README.md
+pick 5817334 Add credit to Colt Steele in README
+```
+
+On closing the editor we just get a `Successfully rebased and updated refs/heads/main.` message in the terminal - and here's the output of `git log`:
+
+```
+98aeb81 (HEAD -> main) Add credit to Colt Steele in README
+efb4bba Create README.md
+0a29a57 my cat made this commit
+1de4c87 fix another navbar typo
+71e2ecc fix navbar typos
+5328d1a add top navbar
+4a53935 add bootstrap
+519aab6 add basic HTML boilerplate
+cbee26b I added project files
+0e19c7a initial commit
+```
+
+Notice we no longer have the `whoops...` commit - it has become part of the `add bootstrap` commit and the hashed have changed from then onwards. 
+
+For reference, here's what the output would be if we used `squash` instead:
+
+```
+33c3c32 (HEAD -> main) Add credit to Colt Steele in README
+2cb213a Create README.md
+3b426af my cat made this commit
+27ae71e fix another navbar typo
+52c3fd7 fix navbar typos
+293c41f add top navbar
+cdae1a2 add bootstrap
+519aab6 add basic HTML boilerplate
+cbee26b I added project files
+0e19c7a initial commit
+```
+
+Looks the same right? But let's try `git log` instead of `git log --oneline`:
+
+```
+
+commit 293c41f10baeb82781f9bcca5f87bd1222f3210a
+Author: Colt Steele <5498438+Colt@users.noreply.github.com>
+Date:   Tue Feb 9 14:07:11 2021 -0800
+
+    add top navbar
+
+commit cdae1a2b54b1457497caccc24f09e68ae73b850b
+Author: Colt Steele <5498438+Colt@users.noreply.github.com>
+Date:   Tue Feb 9 14:04:05 2021 -0800
+
+    add bootstrap                                         <--- 
+
+    whoops forgot to add bootstrap js script              <---
+
+commit 519aab65cbe432f3c982e0a11f7cb102e96ec402
+Author: Colt Steele <5498438+Colt@users.noreply.github.com>
+Date:   Tue Feb 9 14:02:45 2021 -0800
+
+    add basic HTML boilerplate
+
+commit cbee26b0cfb3a3fe518a69aaec3996dfbef213c2
+Author: Colt Steele <5498438+Colt@users.noreply.github.com>
+Date:   Tue Feb 9 13:58:21 2021 -0800
+
+    I added project files
+
+commit 0e19c7ad4130d9edb45bf5e4d9f4cbdd233dcffc
+Author: Colt Steele <5498438+Colt@users.noreply.github.com>
+Date:   Tue Feb 9 13:57:10 2021 -0800
+
+    initial commit
+```
+
+We can see that the first line is the commit we want, but we have also kept the commit message from the squashed commit. Most of the time you probably want to just use `fixup` but there may be times for documentation purposes that you will want to retain information of the squashed commit. 
+
+Note that when using `squash` after closing the editor, another instance of your editor will open (unlike with `fixup`) where you can further edit the commit message of the squash. The default will be as you can see above - where each commit message is separated with a new line.
+
+## Dropping commits
+You may well have a commit that you wawnt to completely get rid of, perhaps it's not longer revelant, or just a mistake. In our example `2029e20 my cat made this commit` probably fits the bill. Let's inspect it with `git show 2029e20`:
+
+```
+commit 2029e202554152bc11dc82803c2980d2f260cbe5
+Author: Colt Steele <5498438+Colt@users.noreply.github.com>
+Date:   Tue Feb 9 14:16:17 2021 -0800
+
+    my cat made this commit
+
+diff --git a/app.js b/app.js
+index e69de29..4da4f9b 100644
+--- a/app.js
++++ b/app.js
+@@ -0,0 +1,4 @@
++alskj
++askdj;) (; a
++sdkljasdkljas
++aslkdja)
+\ No newline at end of file
+```
+
+Yes - it doesn't see to be very helpful and obviously a mistake! Let's get rid of it. This time we only need to go back 3 commits so let's use `git rebase -i HEAD~3`:
+
+```
+pick 2029e20 my cat made this commit
+pick 3b23c17 Create README.md
+pick 5817334 Add credit to Colt Steele in README
+```
+
+Let's use `drop` this time:
+
+```
+drop 2029e20 my cat made this commit          <---
+pick 3b23c17 Create README.md
+pick 5817334 Add credit to Colt Steele in README
+```
+
+And just like that, the commit is erased from the history:
+
+```
+e1d9a57 (HEAD -> main) Add credit to Colt Steele in README
+3b104a3 Create README.md
+655204d fix another navbar typo
+2a45e71 fix navbar typos
+4ff2290 add top navbar
+6e39a76 whoops forgot to add bootstrap js script
+240827f add bootstrap
+519aab6 add basic HTML boilerplate
+cbee26b I added project files
+0e19c7a initial commit
+```
+
+## Pushing your rebased changes to the remote
+This is where things can get a little messy. Ideally you would be 100% sure that nobody else has worked on your branch. if it's a feature branch this is likely the case. Your local git commits are now completely different to what's in the remote, even if you only made one change, everything after that commit will effectively be a new commit! `git status` will confirm this:
+
+```
+On branch main
+Your branch and 'origin/main' have diverged,
+and have 2 and 3 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+
+nothing to commit, working tree clean
+```
+
+Contrary to the message above, you don't want to pull the remote change into your local changes - you want to **forcibly update** the remote branch with **your** changes. You normally have to real options at this point:
+
+`git push --force`
+	or
+`git push --force-with-lease`
 
 
-# Coming in future parts(?):
-+ Stashing
-+ Cherry-picking
-+ Tags
-+ Administering Remotes (dealing with force pushing etc)
-+ Merge strategies
-+ Git submodules
-+ Git aliases
-+ Inside the Git folder
-+ Reflogs
-+ More tips & tricks
+`git push --force` simply forces the push, overwriting the remote branch without checking for changes. This can be dangerous if other people are also working on the same branch, as it can overwrite their changes and cause conflicts.
+
+`git push --force-with-lease`, on the other hand, performs an additional check before overwriting the remote branch. It checks whether the remote branch has changed since the last time you pulled or pushed to it. If the remote branch has changed, **the push is aborted to prevent conflicts**. If the remote branch has not changed, the push proceeds as normal.
+
+Basically, if you're 100% certain that you are the only person who has commited to your branch, use `--force` , ortherwise use `force-with-lease` for safety.
+
+***
 
 # Tips & Tricks
+This section will grow, but here are just a few quick tips that you might find useful!
+
 
 ### Switching back and forth between branches quickly
 `git switch -` will switch you back to the last branch you were at. Running it again will revert you to the branch you were on before you originally ran the command. 
 
 ### Changing the default editor for git (if you hate vim)
-
 Most of the time we don't need to use a text editor with git, but for some commands using an editor is unavoidable and, depending on your setup, the default editor is probably `vim`. Vim is a great tool, though has somewhat of a learning curve and probably requires it's own microtraining!
 
 Let's assume we want to use `vscode` instead - here's how we can make it so `vscode` opens instead of `vim` any time we need to use the editor with git [^3]
@@ -557,7 +760,7 @@ If you want to use an editor other case `vscode` the official docs have great pa
 >
 >`git switch -c <branch-name>`
 
-**Recommendation**: use `git switch` for simple tasks around switching and creating branches. `git checkout` has many more function.
+**Recommendation**: use `git switch` for simple tasks around switching and creating branches. `git checkout` has many more functions.
 
 
 ###  Deleting branches
@@ -585,6 +788,17 @@ To force the delete, simply use a capital "D" for the delete flag in the previou
 >`git branch -m <old-name> <new-name>` <-- "-m" stands for "move"
 
 
+# Coming in future parts(?):
++ Stashing
++ Cherry-picking
++ Git Tags
++ Administering Remotes (dealing with force pushing etc)
++ Merge strategies
++ Git submodules
++ Git aliases
++ Inside the Git folder
++ Reflogs
++ More tips & tricks
 
 Footnotes
 
