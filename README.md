@@ -726,6 +726,10 @@ Basically, if you're 100% certain that you are the only person who has commited 
 
 ***
 ---
+***
+---
+***
+---
 
 
 # Tips & Tricks
