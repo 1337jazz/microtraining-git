@@ -137,7 +137,7 @@ At this point you can just code the editor if all you wanted to do was add chang
 
 Here's an example of the output of `git diff`, with some labels to explain the different parts:
 
-![[Pasted image 20230226180847.png]]
+![image](https://user-images.githubusercontent.com/51421673/224288131-4829ff8c-8dde-4235-ace7-c94102e97d26.png)
 
 The first line simply shows us an expanded version of the command.
 
