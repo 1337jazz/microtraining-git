@@ -3,7 +3,7 @@
 ---
 # What this training is about
 
-- An attempt to make you more comfortable with the `terminal` git commands, instead of being reliant on GUIs
+- An attempt to make you more comfortable with the `terminal` git commands instead of being reliant on GUIs
 - An attempt to teach you some tips and tricks with git to make your day-to-day workflow more streamlined
 - Get a little deeper into git to really understand what's going on under the hood with common  issues you might face 
 
@@ -29,7 +29,7 @@ Date:   Tue Jan 10 17:00:17 2023 +0100
 ```
 
 
-For more info you can use the `--pretty=<format>` flag. There are various options here and the default is `medium` (shown above), so use whichever suits your need at the time. For example, for even more info you can use `git log --pretty=fuller`, which splits the `Date` property from into `AuthorDate` and `CommitDate` [^1]
+For more info you can use the `--pretty=<format>` flag. There are various options here and the default is `medium` (shown above), so use whichever suits your needs at the time. For example, for even more info you can use `git log --pretty=fuller`, which splits the `Date` property from into `AuthorDate` and `CommitDate` [^1]
 
 
 ```
@@ -60,7 +60,7 @@ af31224 Remove redundant env var
 ef26ee4 Fix ordering of .env variables
 1792784 Update README, and add env vars for user-service
 4959618 Update README
-2ab4852 Update env.exampple
+2ab4852 Update env.example
 494a482 Add JWT_KEY environment variable for backend service
 0d280a1 Merge branch 'finalise-user-service-local-env' into 'master'
 94f8d5e Fix environment variables for user-service .tar image
@@ -135,7 +135,7 @@ At this point you can just code the editor if all you wanted to do was add chang
 
 ## What does a "diff" look like?
 
-Here's an example of the output of `git diff`, with some lables to explain the different parts:
+Here's an example of the output of `git diff`, with some labels to explain the different parts:
 
 ![[Pasted image 20230226180847.png]]
 
@@ -146,7 +146,7 @@ The first line simply shows us an expanded version of the command.
 - Yellow: Everything from the `@@` to the line before the next `@@` (or the end of the output) is called a **diff chunk**, and the first line is always the **chunk header**
 
 A chunk header can look a little cryptic but is just two sets of numbers, one from the first file (`-`) and one from the current change (`+`). These numbers simply show:
-1. Which linethe chunk starts on
+1. Which line the chunk starts on
 2. How many lines of the file in the chunk showing
 
 So for example, this chunk header:
@@ -195,7 +195,7 @@ To see a diff of what's in the staging area, run `git diff --staged` [^4]
 
 ## See all changes since the last commit
 
-To see everything that's changed since your last commit, r**egardless of whether it's staged or unstaged**, run `git diff HEAD`. 
+To see everything that's changed since your last commit, r**regardless of whether it's staged or unstaged**, run `git diff HEAD`. 
 
 Note that `HEAD` must be capitalised.
 
@@ -262,10 +262,10 @@ Comparing commits works exactly the same way as comparing branch, but you simple
 e.g `git diff c2c1c13..c8ee40f` - note, you can use the abbreviated commit hash
 
 
-# Undoing Changes and Time Traveling
+# Undoing Changes and Time Travelling
 
 ## Checking out old commits
-`git checkout` does a lot of things, which is why new commands like `git siwtch` and `git restore` were introduced with newer versions of git.
+`git checkout` does a lot of things, which is why new commands like `git switch` and `git restore` were introduced with newer versions of git.
 We can use `git checkout` to not only checkout a branch, but also an individual commit.
 
 e.g `git checkout d2349e3` [^5] 
@@ -284,7 +284,7 @@ This is a temporary state, you can take a look around at your files to see what 
 HEAD *usually* refers to a branch, but not necessarily, as you can see in this case. In this case, HEAD points to a commit of your choosing.
 
 ### Referencing commits relative to HEAD
-You can also refer to the commits relative to HEAD, e.g. `git checkout HEAD~1`. In this example we are checking out *the commit before* HEAD. You can think of tilde (`~`) as "minus". An alternative for referening one commit prior is `git checkout HEAD^`.
+You can also refer to the commits relative to HEAD, e.g. `git checkout HEAD~1`. In this example we are checking out *the commit before* HEAD. You can think of tilde (`~`) as "minus". An alternative for referencing one commit prior is `git checkout HEAD^`.
 
 Of course you can go any number of commits back: `git checkout HEAD~5`.
 
@@ -327,7 +327,7 @@ Changes to be committed:
 There are at least two way of "undoing" commits with git, which both accomplish the same thing in different ways
 
 ### Resetting with  `git reset`
-You might end up in a scenario where made some commits on a branch you didn't mean to, for example directly on "master" instead of a feature branch. You can use `git reset` to fix that - `git reset` moves the HEAD pointer backwards, to the commit you choose, **eliminating commits**
+You might end up in a scenario where you made some commits on a branch you didn't mean to, for example directly on "master" instead of a feature branch. You can use `git reset` to fix that - `git reset` moves the HEAD pointer backwards, to the commit you choose, **eliminating commits**
 
 `git reset <commit>` will reset the repository back to that commit, anything before that commit is **gone** - but **not the actual changes**. The changes are still in your working directory.
 
@@ -356,7 +356,7 @@ If you **do** want to remove the commit **and** permanently remove the changes i
 ### Reverting with `git revert`
 `git revert` is similar to `git reset` in that it will undo a commit, however the difference is that `git revert` will create a new commit that will contain the "undoing" of the commit you chose.
 
-The main reason you would choose `revert` over `reset` is if **other people already have commit you are reverting on their machines**. Resetting can cause issues with merge conflicts that reverting doesn't, since reverting is not changing the git timeline, simple appending to it.
+The main reason you would choose `revert` over `reset` is if **other people already have commit you are reverting on their machines**. Resetting can cause issues with merge conflicts that reverting doesn't, since reverting is not changing the git timeline, simply appending to it.
 
 ```
 Demo:
@@ -421,10 +421,10 @@ In this case we can simply remove these three lines:
 >>>>>>> new
 ```
 
-and then choose if we want to keep "james", "jane", or both. After that we just need to run `git add .` to stage the changes, and the commit the new changes. 
+and then choose if we want to keep "james", "jane", or both. After that we just need to run `git add .` to stage the changes, and then commit the new changes. 
 
 # Rebasing
-The sacriest/most confusing git command? Not really. There are just a few things to know about that can clear things up.
+The scariest/most confusing git command? Not really. There are just a few things to know about that can clear things up.
 
 ## Rebasing vs Merging
 
@@ -434,7 +434,7 @@ We won't go into detail with "normal" rebasing right now, but we'll mention the 
 
 `git rebase` moves changes from one branch to another by reapplying each of the changes onto the destination branch. This creates a linear history that may be easier to understand but can result in conflicts if multiple developers are working on the same code.
 
-The part that most people are scared of (even though they might not be able to describe it) is that rebasing can become hell if team member a rebases commits 
+The part that most people are scared of (even though they might not be able to describe it) is that rebasing can become hell if team member “a” rebases commits that team-member “b” does not have.
 
 # Interactive Rebasing - cleaning up history
 Interactive rebasing in Git allows you to modify, reorder, or split commits in a branch before incorporating them into another branch, by using the command `git rebase -i`. This can help keep a clean commit history, but should be used with caution to avoid potential issues for other contributors, as discussed above.
@@ -448,11 +448,11 @@ git clone https://gitlab.com/microtraining-git/interactive-rebase-demo
 
 ```
 
-When you run `git rebase -i` you need to provide a commit to go back to. You can do this by  either giving an explcit commit hash, or using the HEAD syntax discussed previously. For example to include the last 4 commits in your rebase you could use:
+When you run `git rebase -i` you need to provide a commit to go back to. You can do this by  either giving an explicit commit hash, or using the HEAD syntax discussed previously. For example to include the last 4 commits in your rebase you could use:
 
 `git rebase -i HEAD~4`
 
-If you only have a few commits and what to go back to the very first commit the HEAD syntax won't work if you also want to include the "initial commit". For this situation you need to use, the `--root` flag instead of a commit reference. Usually you will likely have hundreds if not thousands of commits, so it wouldn't be practical to go all the way back to initial project creation, but in this case we only have about 11 commits in total so we'll keep it simple:
+If you only have a few commits and what to go back to the very first commit the HEAD syntax won't work if you also want to include the "initial commit". For this situation you need to use the `--root` flag instead of a commit reference. Usually you will likely have hundreds if not thousands of commits, so it wouldn't be practical to go all the way back to initial project creation, but in this case we only have about 11 commits in total so we'll keep it simple:
 
 `git rebase -i --root`
 
@@ -466,7 +466,7 @@ When you start a rebase there are a few options available to you - let's talk ab
 # f, fixup [-C | -c] <commit> = like "squash" but keep only the previous
 ```
 
-When you run the command, your chosen editor wiill open and you'll see all the commits from the comimt you chose all the way up to HEAD. You'll notice that the order of the commits has changed. Normally the order goes from (top to bottom) newest commit to oldest. In the interactive rebase it's reversed (example shows the result of `git rebase -i --root):
+When you run the command, your chosen editor will open and you'll see all the commits from the commit you chose all the way up to HEAD. You'll notice that the order of the commits has changed. Normally the order goes from (top to bottom) newest commit to oldest. In the interactive rebase it's reversed (example shows the result of `git rebase -i --root):
 
 ```
 pick 0e19c7a initial commit
@@ -501,7 +501,7 @@ pick 3b23c17 Create README.md
 pick 5817334 Add credit to Colt Steele in README
 ```
 
-Note that **I don't actually change the commit message here**. I'm just telling git want I want to do, to each commit, and I can queue up several commands. In this case when I save and close my editor, another instance of my editor will immediately open:
+Note that **I don't actually change the commit message here**. I'm just telling git what I want to do, to each commit, and I can queue up several commands. In this case when I save and close my editor, another instance of my editor will immediately open:
 
 ```
 I added project files
@@ -512,7 +512,7 @@ I added project files
 // ...
 ````
 
-Here is where you can actually change the commit message to whatever you want. Running `git log --oneline` now shows the newly editted commit message:
+Here is where you can actually change the commit message to whatever you want. Running `git log --oneline` now shows the newly edited commit message:
 
 ```
 4d03f73 (HEAD -> main) Add credit to Colt Steele in README
@@ -532,7 +532,7 @@ You'll notice now that every commit starting with the commit whose message we ch
 
 ## Fixing up / squashing
 
-`fixup` and `squash` accomplish the same thing, but the difference is just which log messages to keep. The idea behind these commands is the merge together two or more commits into one. Let's reset back to the remote and get our repo back to how it was without any rebasing:
+`fixup` and `squash` accomplish the same thing, but the difference is just which log messages to keep. The idea behind these commands is to merge together two or more commits into one. Let's reset back to the remote and get our repo back to how it was without any rebasing:
 
 `git reset --hard origin/main`  <-- *(this command will be explained later)*
 
@@ -588,7 +588,7 @@ cbee26b I added project files
 0e19c7a initial commit
 ```
 
-Notice we no longer have the `whoops...` commit - it has become part of the `add bootstrap` commit and the hashed have changed from then onwards. 
+Notice we no longer have the `whoops...` commit - it has become part of the `add bootstrap` commit and the hashes have changed from then onwards. 
 
 For reference, here's what the output would be if we used `squash` instead:
 
@@ -647,7 +647,7 @@ We can see that the first line is the commit we want, but we have also kept the 
 Note that when using `squash` after closing the editor, another instance of your editor will open (unlike with `fixup`) where you can further edit the commit message of the squash. The default will be as you can see above - where each commit message is separated with a new line.
 
 ## Dropping commits
-You may well have a commit that you wawnt to completely get rid of, perhaps it's not longer revelant, or just a mistake. In our example `2029e20 my cat made this commit` probably fits the bill. Let's inspect it with `git show 2029e20`:
+You may well have a commit that you want to completely get rid of, perhaps it's no longer relevant, or just a mistake. In our example `2029e20 my cat made this commit` probably fits the bill. Let's inspect it with `git show 2029e20`:
 
 ```
 commit 2029e202554152bc11dc82803c2980d2f260cbe5
@@ -668,7 +668,7 @@ index e69de29..4da4f9b 100644
 \ No newline at end of file
 ```
 
-Yes - it doesn't see to be very helpful and obviously a mistake! Let's get rid of it. This time we only need to go back 3 commits so let's use `git rebase -i HEAD~3`:
+Yes - it doesn't seem to be very helpful and obviously a mistake! Let's get rid of it. This time we only need to go back 3 commits so let's use `git rebase -i HEAD~3`:
 
 ```
 pick 2029e20 my cat made this commit
@@ -722,7 +722,7 @@ Contrary to the message above, you don't want to pull the remote change into you
 
 `git push --force-with-lease`, on the other hand, performs an additional check before overwriting the remote branch. It checks whether the remote branch has changed since the last time you pulled or pushed to it. If the remote branch has changed, **the push is aborted to prevent conflicts**. If the remote branch has not changed, the push proceeds as normal.
 
-Basically, if you're 100% certain that you are the only person who has commited to your branch, use `--force` , ortherwise use `force-with-lease` for safety.
+Basically, if you're 100% certain that you are the only person who has committed to your branch, use `--force` , otherwise use `force-with-lease` for safety.
 
 ***
 ---
@@ -740,7 +740,7 @@ This section will grow, but here are just a few quick tips that you might find u
 `git switch -` will switch you back to the last branch you were at. Running it again will revert you to the branch you were on before you originally ran the command. 
 
 ### Changing the default editor for git (if you hate vim)
-Most of the time we don't need to use a text editor with git, but for some commands using an editor is unavoidable and, depending on your setup, the default editor is probably `vim`. Vim is a great tool, though has somewhat of a learning curve and probably requires it's own microtraining!
+Most of the time we don't need to use a text editor with git, but for some commands using an editor is unavoidable and, depending on your setup, the default editor is probably `vim`. Vim is a great tool, though has somewhat of a learning curve and probably requires its own microtraining!
 
 Let's assume we want to use `vscode` instead - here's how we can make it so `vscode` opens instead of `vim` any time we need to use the editor with git [^3]
 
@@ -779,7 +779,7 @@ If you want to use an editor other case `vscode` the official docs have great pa
 
 
 #### Force delete
-If the branch you want to delete has uncommited changes, you might get this message:
+If the branch you want to delete has uncommitted changes, you might get this message:
 ```
 The branch <branch-to-delete> is not fully merged
 ```
@@ -818,4 +818,5 @@ Footnotes
 
 [^4]:  You can also use`git diff --cached` is an alternative alias for `git diff --staged`
 [^5]: You can also use `git switch {hash} --detach` to accomplish the same thing
+
 
