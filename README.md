@@ -195,7 +195,7 @@ To see a diff of what's in the staging area, run `git diff --staged` [^4]
 
 ## See all changes since the last commit
 
-To see everything that's changed since your last commit, r**regardless of whether it's staged or unstaged**, run `git diff HEAD`. 
+To see everything that's changed since your last commit, **regardless of whether it's staged or unstaged**, run `git diff HEAD`. 
 
 Note that `HEAD` must be capitalised.
 
